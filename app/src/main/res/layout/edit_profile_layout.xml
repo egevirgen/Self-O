@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/edit_profile_image_container"
+        android:layout_alignBottom="@+id/edit_finish"
+        android:layout_marginTop="-60dp"
+        android:background="#D6564B"
+        />
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit_profile_image_container"
+        android:layout_marginTop="40dp"
+        android:layout_centerHorizontal="true">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/edit_profile_image_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_anchor="@+id/edit_profile_image"
+            app:layout_anchorGravity="right|bottom"
+            app:backgroundTint="@color/com_facebook_button_login_silver_background_color"
+            android:src="@drawable/add_photo"
+            android:tint="#D6564B"
+            app:fabSize="auto"
+            app:elevation="1dp"
+        />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/edit_profile_image"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            app:civ_border_width="5dp"
+            app:civ_border_color="#D6564B"
+            />
+    </android.support.design.widget.CoordinatorLayout>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/edittext_8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_profile_image_container"
+        app:met_floatingLabel="highlight"
+        app:met_baseColor="#FAFAFA"
+        app:met_textColorHint="#CCFAFAFA"
+        app:met_textColor="#FAFAFA"
+        app:met_primaryColor="#FAFAFA"
+        android:textSize="14dp"
+        android:layout_marginRight="10dp"
+        android:capitalize="words"
+        android:layout_marginLeft="10dp"
+        app:met_floatingLabelText="Full Name"
+        app:met_floatingLabelAlwaysShown="true"
+        app:met_singleLineEllipsis="true"
+        app:met_iconLeft="@drawable/name"
+        android:hint="(Not Specified)"/>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/edittext_9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edittext_8"
+        app:met_floatingLabel="highlight"
+        app:met_baseColor="#FAFAFA"
+        app:met_textColorHint="#CCFAFAFA"
+        app:met_textColor="#FAFAFA"
+        app:met_primaryColor="#FAFAFA"
+        android:textSize="14dp"
+        android:layout_marginRight="10dp"
+        android:capitalize="words"
+        android:layout_marginLeft="10dp"
+        app:met_floatingLabelText="City"
+        app:met_floatingLabelAlwaysShown="true"
+        app:met_singleLineEllipsis="true"
+        app:met_iconLeft="@drawable/city"
+        android:hint="(Not Specified)"/>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/edittext_10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edittext_9"
+        app:met_floatingLabel="highlight"
+        app:met_baseColor="#FAFAFA"
+        app:met_textColorHint="#CCFAFAFA"
+        app:met_textColor="#FAFAFA"
+        app:met_primaryColor="#FAFAFA"
+        android:textSize="14dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        app:met_floatingLabelText="Date of Birth"
+        app:met_floatingLabelAlwaysShown="true"
+        app:met_singleLineEllipsis="true"
+        android:inputType="date"
+        app:met_iconLeft="@drawable/birth"
+        android:hint="(Not Specified)"/>
+
+    <android.support.v7.widget.AppCompatRadioButton
+        app:buttonTint="@android:color/white"
+        android:text="Female"
+        android:textColor="#FAFAFA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edittext_10"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="18dp"
+        android:id="@+id/radio_female" />
+    <android.support.v7.widget.AppCompatRadioButton
+        app:buttonTint="@android:color/white"
+        android:text="Not Specified"
+        android:textColor="#FAFAFA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edittext_10"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/radioButton_notspecified" />
+    <android.support.v7.widget.AppCompatRadioButton
+        app:buttonTint="@android:color/white"
+        android:text="Male"
+        android:textColor="#FAFAFA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edittext_10"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="18dp"
+        android:id="@+id/radioButton_male" />
+
+    <Button
+        android:id="@+id/edit_finish"
+        android:text="Finish Editing"
+        android:background="#D6564B"
+        android:layout_below="@+id/radioButton_male"
+        android:layout_marginTop="15dp"
+        android:textColor="@android:color/white"
+        android:textAllCaps="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

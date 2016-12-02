@@ -1,0 +1,137 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#80000000"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context="com.corp.theapp.FirstPage$PlaceholderFragment">
+
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/edittext_1"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:met_floatingLabel="highlight"
+        app:met_textColorHint="#FAFAFA"
+        app:met_baseColor="#FAFAFA"
+        app:met_primaryColor="#2196F3"
+        app:met_floatingLabelText="Email"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="10dp"
+        android:hint="Email"
+        android:textSize="14dp"
+        app:met_singleLineEllipsis="true"
+        app:met_iconLeft="@drawable/mail" />
+
+
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/edittext_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edittext_1"
+        app:met_floatingLabel="highlight"
+        app:met_baseColor="#FAFAFA"
+        app:met_textColorHint="#FAFAFA"
+        app:met_primaryColor="#2196F3"
+        android:textSize="14dp"
+        android:layout_marginRight="10dp"
+        app:met_floatingLabelText="Password"
+        app:met_singleLineEllipsis="true"
+        app:met_clearButton="true"
+        app:met_iconLeft="@drawable/password"
+        android:hint="Password"/>
+
+
+        </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/button_1"
+        android:text="Sign In"
+        android:layout_above="@+id/textview_4"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/whitebuttonbackground"
+        android:textColor="@android:color/white"
+        android:textAllCaps="false"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#FAFAFA"
+        android:layout_above="@+id/button_2"
+        android:layout_marginBottom="12dp"
+        android:layout_toLeftOf="@+id/textview_4"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="OR"
+        android:textColor="#FAFAFA"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/textview_4"
+        android:layout_above="@+id/button_2"
+        android:textSize="14dp"
+        android:layout_marginBottom="5dp"
+        />
+    <View
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#FAFAFA"
+        android:layout_above="@+id/button_2"
+        android:layout_marginBottom="12dp"
+        android:layout_toRightOf="@id/textview_4"
+        />
+
+    <Button
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/button_2"
+        android:layout_above="@+id/textview_3"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/pinkbuttonbackground"
+        android:textColor="@android:color/white"
+        android:text="Sign in with Facebook"
+        android:textAllCaps="false" />
+    <ProgressBar
+        android:layout_marginTop="-7dp"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:indeterminate="true"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:id="@+id/progress_bar_1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:textColor="#95FAFAFA"
+        android:id="@+id/textview_3"
+        android:textSize="14dp"
+        android:text="Forgot Password"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        />
+
+</RelativeLayout>

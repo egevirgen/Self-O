@@ -1,0 +1,99 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#80000000"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:id="@+id/sign_up_container"
+    android:visibility="gone"
+    tools:context="com.corp.theapp.FirstPage$PlaceholderFragment">
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/edittext_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:met_floatingLabel="highlight"
+        app:met_textColorHint="#FAFAFA"
+        app:met_baseColor="#FAFAFA"
+        app:met_primaryColor="#2196F3"
+        app:met_floatingLabelText="Full Name"
+        android:layout_marginRight="10dp"
+        android:hint="Full Name"
+        android:textSize="14dp"
+        android:layout_marginTop="15dp"
+        android:inputType="textCapWords"
+        app:met_singleLineEllipsis="true"
+        app:met_iconLeft="@drawable/name" />
+
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/edittext_4"
+        android:layout_below="@+id/edittext_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:met_floatingLabel="highlight"
+        app:met_textColorHint="#FAFAFA"
+        app:met_baseColor="#FAFAFA"
+        app:met_primaryColor="#2196F3"
+        app:met_floatingLabelText="Email"
+        android:layout_marginRight="10dp"
+        android:hint="Your Email"
+        android:textSize="14dp"
+        app:met_singleLineEllipsis="true"
+        app:met_iconLeft="@drawable/mail" />
+
+
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/edittext_5"
+        android:layout_below="@+id/edittext_4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:met_floatingLabel="highlight"
+        app:met_textColorHint="#FAFAFA"
+        app:met_baseColor="#FAFAFA"
+        app:met_primaryColor="#2196F3"
+        app:met_floatingLabelText="Password"
+        android:hint="Choose a password"
+        android:paddingRight="5dp"
+        android:layout_marginRight="10dp"
+        android:textSize="14dp"
+        app:met_clearButton="true"
+        app:met_singleLineEllipsis="true"
+        app:met_iconLeft="@drawable/password" />
+
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/edittext_6"
+        android:layout_below="@+id/edittext_5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:met_floatingLabel="highlight"
+        app:met_textColorHint="#FAFAFA"
+        app:met_baseColor="#FAFAFA"
+        app:met_primaryColor="#2196F3"
+        app:met_floatingLabelText="Repeat Password"
+        app:met_clearButton="true"
+        android:layout_marginRight="10dp"
+        android:paddingRight="5dp"
+        android:hint="Repeat your password"
+        android:textSize="14dp"
+        app:met_singleLineEllipsis="true"
+        app:met_iconLeft="@drawable/password" />
+
+        <Button
+            android:id="@+id/button_3"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/whitebuttonbackground"
+            android:textColor="@android:color/white"
+            android:text="Sign Up"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textAllCaps="false" />
+
+</RelativeLayout>
