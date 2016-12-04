@@ -15,12 +15,12 @@ import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -49,7 +49,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, LocationListener,SearchView.OnQueryTextListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, LocationListener,SearchView.OnQueryTextListener{
     LatLng latLng;
     protected static final int RESULT_SPEECH = 1;
     private GoogleMap mMap;
@@ -63,7 +63,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     ListViewAdapter adapter;
     Location latlong=null;
     SearchView editsearch;
-    String[] animalNameList;
+    String[] placeList;
     ImageView ivIcon;
     int searchImgId;
     RelativeLayout relativeLayout;
@@ -89,6 +89,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         searchEditText.setTextSize(14f);
         searchEditText.setBackgroundColor(Color.WHITE);
         editsearch.setBackgroundColor(Color.WHITE);
+        setSearchViewEditTextBackgroundColor(this,editsearch);
+        View bottomSheet = findViewById(R.id.bottom_sheet);
 
         searchEditText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,45 +100,64 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        setSearchViewEditTextBackgroundColor(this,editsearch);
-        View bottomSheet = findViewById(R.id.bottom_sheet);
-
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior.setPeekHeight(0);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
+        bottomSheet.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                Log.e("KEY PRESS = ","View ="+view+"| i ="+i+"| keyevent="+keyEvent);
+                return false;
+            }
+        });
         // internetten array çekicez TODO
-        animalNameList = new String[]{"Yemen Kahvesi--Antalya--Altınkum--36.864727f--30.634416f", "Osmanlı Kahvecisi--Antalya--Bayındır--36.901504--30.672853", "Burger King--Antalya--Meltem--36.892676--30.667396", "Starbucks--Antalya--Konyaaltı--36.884583--30.659156","Rıhtım Döner--Antalya--Akdeniz Üniversitesi--36.898750--30.653261"};
+        placeList = new String[]{"Yemen Kahvesi--Antalya--Altınkum--36.864727f--30.634416f", "Osmanlı Kahvecisi--Antalya--Bayındır--36.901504--30.672853", "Burger King--Antalya--Meltem--36.892676--30.667396", "Starbucks--Antalya--Konyaaltı--36.884583--30.659156","Rıhtım Döner--Antalya--Akdeniz Üniversitesi--36.898750--30.653261"};
 
         list = (ListView) findViewById(R.id.listview);
-
-        for (String anAnimalNameList : animalNameList) {
-            PlaceNames placeNames = new PlaceNames(anAnimalNameList);
+        for (String placeListString : placeList) {
+            PlaceNames placeNames = new PlaceNames(placeListString);
             arraylist.add(placeNames);
         }
 
+        editsearch.setOnQueryTextListener(this);
         editsearch.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
+                Log.e("focused=",""+b);
+                if(b)
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
             }
         });
-        editsearch.setOnQueryTextListener(this);
 
-        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorlayout);
-        View bottomSheet_1 = coordinatorLayout.findViewById(R.id.bottom_sheet);
-        final BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet_1);
+        searchImgId = getResources().getIdentifier("android:id/search_mag_icon", null, null);
+        ivIcon = (ImageView) editsearch.findViewById(searchImgId);
 
 
-        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        //searchview button listener
+        editsearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (mBottomSheetBehavior.getState()== BottomSheetBehavior.STATE_EXPANDED)
+                {
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+                }
+                else if (mBottomSheetBehavior.getState()== BottomSheetBehavior.STATE_COLLAPSED) {
+
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+                }
+
+
+            }
+        });
+        final InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet_1, int newState) {
                 // React to state change
-                Log.e("onStateChanged", "onStateChanged:" + newState);
-                ivIcon = (ImageView) editsearch.findViewById(searchImgId);
-                searchImgId = getResources().getIdentifier("android:id/search_mag_icon", null, null);
-                InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
 
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
 
@@ -151,8 +172,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     });
                     colorAnimation.start();
-
-
 
                     if(ivIcon!=null) {
                         ivIcon.setImageResource(R.drawable.search_button);
@@ -175,45 +194,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     });
                     colorAnimation.start();
-
                     imm.hideSoftInputFromWindow(bottomSheet_1.getWindowToken(),0);
-                    //  editsearch.clearFocus();
+                    editsearch.clearFocus();
                     ivIcon.setImageResource(R.drawable.searchview_search);
                 }
-
-
-
-//searchview button listener
-                Log.e("STATEZAAA =","efe"+mBottomSheetBehavior.getState());
-                editsearch.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        if (mBottomSheetBehavior.getState()== BottomSheetBehavior.STATE_EXPANDED)
-                        {
-                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-                        }
-                        else if (mBottomSheetBehavior.getState()== BottomSheetBehavior.STATE_COLLAPSED) {
-
-                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-
-                        }
-
-
-                    }
-                });
-
-
-
-
 
             }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                // React to dragging events
-                Log.e("onSlide", "onSlide");
             }
         });
 
@@ -225,10 +214,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-
-//Speak part
         ImageButton btnSpeak = (ImageButton) findViewById(R.id.mic);
-
         btnSpeak.setBackgroundColor(Color.WHITE);
         btnSpeak.setOnClickListener(new View.OnClickListener() {
 
@@ -255,6 +241,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(mBottomSheetBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        else
+        super.onBackPressed();
     }
 
     @Override
@@ -291,20 +285,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-
-    @Override
-    public void onBackPressed() {
-
-        if (mBottomSheetBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED){
-            Log.d("CDA", "onKeyDown Called");
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        }else {
-
-
-            super.onBackPressed();
-        }
-
-    }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
@@ -344,7 +324,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         for (int i=0;i<5;i++) {
 
             latLng = new LatLng(latt[i],longt[i]);
-            mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).title(animalNameList[i].split("--")[0]).snippet(animalNameList[i].split("--")[1]+"/"+animalNameList[i].split("--")[2]));
+            mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).title(placeList[i].split("--")[0]).snippet(placeList[i].split("--")[1]+"/"+ placeList[i].split("--")[2]));
         }
     }
 
@@ -381,6 +361,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ViewGroup viewGroup = (ViewGroup) searchView.findViewById(searchPlateId);
         viewGroup.setBackgroundColor(Color.WHITE);
     }
+
 
 }
 
