@@ -211,7 +211,7 @@ public class QRReader extends AppCompatActivity   implements  ZXingScannerView.R
     protected void loadingDialog(){
                                     pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
                                     pDialog.getProgressHelper().setBarColor(Color.parseColor("#F4511E"));
-                                    pDialog.setTitleText("qr Scan Successful");
+                                    pDialog.setTitleText("Qr Scan Successful");
                                     pDialog.setContentText("\nPlease Wait...");
                                     pDialog.setCancelable(false);
                                     pDialog.show();
