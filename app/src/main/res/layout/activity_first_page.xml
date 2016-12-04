@@ -26,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_centerInParent="true"
@@ -110,6 +111,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
+                        <android.support.design.widget.FloatingActionButton
+                            android:id="@+id/profile_scan_qr_info"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/info"
+                            app:fabSize="mini"
+                            android:layout_alignTop="@+id/profile_scan_qr_photo"
+                            app:backgroundTint="@android:color/transparent"
+                            app:elevation="1dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginTop="5dp"
+                            />
+
                         <ImageView
                             android:id="@+id/profile_scan_qr_photo"
                             android:layout_width="match_parent"
@@ -167,6 +182,21 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
+
+                        <android.support.design.widget.FloatingActionButton
+                            android:id="@+id/profile_participating_workplaces_info"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/info"
+                            app:fabSize="mini"
+                            android:layout_alignTop="@+id/profile_participating_workplaces_photo"
+                            app:backgroundTint="@android:color/transparent"
+                            app:elevation="1dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginTop="5dp"
+                            />
+
                         <ImageView
                             android:id="@+id/profile_participating_workplaces_photo"
                             android:layout_width="match_parent"
@@ -223,6 +253,20 @@
                         android:background="#FFFFFF"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
+                        <android.support.design.widget.FloatingActionButton
+                            android:id="@+id/profile_checkin_order_history_info"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/info"
+                            app:fabSize="mini"
+                            android:layout_alignTop="@+id/profile_checkin_order_history_photo"
+                            app:backgroundTint="@android:color/transparent"
+                            app:elevation="1dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginTop="5dp"
+                            />
 
                         <ImageView
                             android:id="@+id/profile_checkin_order_history_photo"
