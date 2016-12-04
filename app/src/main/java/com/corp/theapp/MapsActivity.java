@@ -43,6 +43,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -69,16 +70,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     ImageButton locationbutton;
     ArrayList<PlaceNames> arraylist = new ArrayList<>();
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_maps);
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
+    public void Initialize(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int permissionCheck = ContextCompat.checkSelfPermission(MapsActivity.this,
                     Manifest.permission.ACCESS_FINE_LOCATION);
@@ -192,7 +184,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 //searchview button listener
-Log.e("STATEZAAA =","efe"+mBottomSheetBehavior.getState());
+                Log.e("STATEZAAA =","efe"+mBottomSheetBehavior.getState());
                 editsearch.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -265,6 +257,17 @@ Log.e("STATEZAAA =","efe"+mBottomSheetBehavior.getState());
 
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_maps);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+    }
+
 
 
     @Override
@@ -325,7 +328,10 @@ Log.e("STATEZAAA =","efe"+mBottomSheetBehavior.getState());
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Initialize();
         mMap = googleMap;
+        MapStyleOptions mapStyleOptions = MapStyleOptions.loadRawResourceStyle(this,R.raw.style_json);
+        mMap.setMapStyle(mapStyleOptions);
         adapter = new ListViewAdapter(this, arraylist, mMap, mBottomSheetBehavior);
         list.setAdapter(adapter);
 
@@ -338,7 +344,7 @@ Log.e("STATEZAAA =","efe"+mBottomSheetBehavior.getState());
         for (int i=0;i<5;i++) {
 
             latLng = new LatLng(latt[i],longt[i]);
-            mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).title(animalNameList[i].split("--")[0]));
+            mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).title(animalNameList[i].split("--")[0]).snippet(animalNameList[i].split("--")[1]+"/"+animalNameList[i].split("--")[2]));
         }
     }
 
@@ -351,14 +357,13 @@ Log.e("STATEZAAA =","efe"+mBottomSheetBehavior.getState());
             public void run() {try {
                 latlong = mMap.getMyLocation();
                 latlong1 = new LatLng(latlong.getLatitude(), latlong.getLongitude());
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlong1, 12)); // Animate fonksiyonu map açıldığında dönecek şekilde ayarlanacak. TODO //
-
+         // Animate fonksiyonu map açıldığında dönecek şekilde ayarlanacak. TODO //
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlong1,12));
             } catch (NullPointerException | IllegalStateException e) {
 
             }}
         };
         mainHandler.postDelayed(myRunnable,500);
-//Toast.makeText(getApplicationContext(),,Toast.LENGTH_LONG).show();
     }
 
     @Override

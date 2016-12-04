@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <ImageView
-                android:tint="#80000000"
+                android:tint="#90000000"
                 android:scaleType="centerCrop"
                 android:layout_alignBottom="@+id/profile_mail"
                 android:id="@+id/profile_background"
@@ -80,6 +80,7 @@
                 android:src="@drawable/edit"
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="5dp"
+                android:fadingEdge="vertical"
                 />
 
 
@@ -87,40 +88,36 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_below="@+id/profile_background"
+    android:scrollbars="none"
     >
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                >
-                <View
-                    android:id="@+id/view_center"
-                    android:layout_width="1dp"
-                    android:layout_height="1dp"
-                    android:layout_centerHorizontal="true" />
-
                 <android.support.v7.widget.CardView
+                    android:layout_marginTop="0.5dp"
                     android:id="@+id/profile_scan_qr"
                     android:layout_alignParentTop="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/view_center"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="2.5dp"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
                     app:cardBackgroundColor="@android:color/transparent"
                     >
 
                     <RelativeLayout
                         android:background="#FFFFFF"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="wrap_content">
 
                         <ImageView
                             android:id="@+id/profile_scan_qr_photo"
                             android:layout_width="match_parent"
-                            android:layout_height="100dp"
+                            android:layout_height="match_parent"
+                            android:layout_alignBottom="@+id/profile_qr_text_4"
                             android:src="@drawable/qr"
                             android:scaleType="centerCrop"
+                            android:minHeight="150dp"
                             android:layout_alignParentTop="true"
                             />
 
@@ -130,12 +127,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Scan QR Code"
-                            android:textColor="#212121"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
-                            android:paddingTop="5dp"
-                            android:layout_below="@+id/profile_scan_qr_photo"
+                            android:minHeight="150dp"
+                            android:textColor="#FFFFFF"
+                            android:background="#90000000"
+                            android:padding="10dp"
                             android:textSize="18dp"
+                            android:textStyle="bold"
+                            android:gravity="center"
                             />
 
                         <TextView
@@ -148,35 +146,36 @@
                             android:paddingRight="10dp"
                             android:paddingBottom="5dp"
                             android:textSize="14dp"
+                            android:visibility="gone"
                             />
                     </RelativeLayout>
 
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
+                    app:cardElevation="0dp"
+                    android:layout_marginTop="0.5dp"
+                    app:cardCornerRadius="0dp"
                     android:id="@+id/profile_participating_workplaces"
                     android:layout_below="@+id/profile_scan_qr"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/view_center"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="2.5dp"
-                    app:cardBackgroundColor="@android:color/transparent"
                     >
 
                     <RelativeLayout
                         android:background="#FFFFFF"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="wrap_content">
 
                         <ImageView
                             android:id="@+id/profile_participating_workplaces_photo"
                             android:layout_width="match_parent"
-                            android:layout_height="100dp"
+                            android:layout_height="match_parent"
+                            android:minHeight="150dp"
                             android:src="@drawable/participating_workplaces"
                             android:scaleType="centerCrop"
                             android:layout_alignParentTop="true"
+                            android:layout_alignBottom="@+id/profile_qr_text_2"
                             />
 
 
@@ -185,11 +184,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Participating Workplaces"
-                            android:textColor="#212121"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
-                            android:paddingTop="5dp"
-                            android:layout_below="@+id/profile_participating_workplaces_photo"
+                            android:textColor="#FFFFFF"
+                            android:background="#90000000"
+                            android:textStyle="bold"
+                            android:padding="10dp"
+                            android:gravity="center"
+                            android:minHeight="150dp"
                             android:textSize="18dp"
                             />
 
@@ -203,36 +203,36 @@
                             android:paddingRight="10dp"
                             android:paddingBottom="5dp"
                             android:textSize="14dp"
+                            android:visibility="gone"
                             />
                     </RelativeLayout>
 
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
+                    app:cardElevation="0dp"
+                    android:layout_marginTop="0.5dp"
+                    app:cardCornerRadius="0dp"
                     android:id="@+id/profile_checkin_order_history"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="2.5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_alignParentTop="true"
-                    app:cardBackgroundColor="@android:color/transparent"
-                    android:layout_toRightOf="@+id/view_center"
+                    android:layout_below="@+id/profile_participating_workplaces"
                     >
 
                     <RelativeLayout
                         android:background="#FFFFFF"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="wrap_content">
 
                         <ImageView
                             android:id="@+id/profile_checkin_order_history_photo"
                             android:layout_width="match_parent"
-                            android:layout_height="100dp"
+                            android:layout_height="match_parent"
+                            android:minHeight="150dp"
                             android:src="@drawable/history"
                             android:scaleType="centerCrop"
                             android:layout_alignParentTop="true"
+                            android:layout_alignBottom="@+id/profile_qr_text_3"
                             />
 
 
@@ -242,12 +242,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Check-in and Order History"
-                            android:textColor="#212121"
-                            android:layout_below="@+id/profile_checkin_order_history_photo"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
-                            android:layout_marginTop="5dp"
+                            android:textColor="#FFFFFF"
+                            android:background="#90000000"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:padding="10dp"
                             android:textSize="18dp"
+                            android:minHeight="150dp"
                             />
 
                         <TextView
@@ -260,6 +261,7 @@
                             android:paddingRight="10dp"
                             android:paddingBottom="5dp"
                             android:textSize="14dp"
+                            android:visibility="gone"
                             />
                     </RelativeLayout>
 
