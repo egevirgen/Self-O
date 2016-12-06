@@ -112,10 +112,11 @@
         android:text="Sign in with Facebook"
         android:textAllCaps="false" />
     <ProgressBar
-        android:layout_marginTop="-7dp"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_alignParentTop="true"
+        android:layout_above="@+id/button_1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:indeterminate="true"
         android:visibility="gone"
         android:layout_height="wrap_content"

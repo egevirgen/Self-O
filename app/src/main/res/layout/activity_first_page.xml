@@ -36,10 +36,11 @@
 
                 />
             <ProgressBar
-                android:layout_width="wrap_content"
+                android:id="@+id/progress_bar_3"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/imageView"
-                style="@style/Widget.AppCompat.ProgressBar"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:indeterminate="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp"
