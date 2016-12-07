@@ -118,6 +118,10 @@ public class FirstPage extends AppCompatActivity {
     static TextView profile_name;
     static TextView profile_mail;
     ViewPager mViewPager;
+    ProgressBar signedinprogress;
+    static ProgressBar editprogress;
+    TextView progresstext;
+    static AlertDialog show;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,7 +183,7 @@ public class FirstPage extends AppCompatActivity {
                         View alertView = inflater.inflate(R.layout.forgot_password_layout, null);
                         final AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                         alert.setView(alertView);
-                        final AlertDialog show = alert.show();
+                        show = alert.show();
                         show.show();
                         TextView canc,cont,header;
                         final ProgressBar progressBar = (ProgressBar) alertView.findViewById(R.id.progress_bar_2);
@@ -566,6 +570,7 @@ public class FirstPage extends AppCompatActivity {
             @Override
             public void onError(FacebookException exception) {
                 // App code
+                Toast.makeText(activity,"An error occured.Please try again.",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -886,7 +891,7 @@ public class FirstPage extends AppCompatActivity {
 
                 final AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.myDialog));
                 alert.setView(alertView);
-                final AlertDialog show = alert.show();
+                show = alert.show();
                 editPhoto = (CircleImageView) alertView.findViewById(R.id.edit_profile_image);
                 FloatingActionButton editPhotoEdit = (FloatingActionButton) alertView.findViewById(R.id.edit_profile_image_fab);
                 editPhotoEdit.setOnClickListener(new View.OnClickListener() {
@@ -979,6 +984,7 @@ public class FirstPage extends AppCompatActivity {
                     private Calendar cal = Calendar.getInstance();};
                 birth.addTextChangedListener(tw);
                 final AppCompatRadioButton female,male,none;
+                editprogress = (ProgressBar) alertView.findViewById(R.id.progress_bar_4);
                 female = (AppCompatRadioButton) alertView.findViewById(R.id.radio_female);
                 male = (AppCompatRadioButton) alertView.findViewById(R.id.radioButton_male);
                 none = (AppCompatRadioButton) alertView.findViewById(R.id.radioButton_notspecified);
@@ -991,14 +997,18 @@ public class FirstPage extends AppCompatActivity {
                 editFinish.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        Boolean catched=false;
+                        editprogress.setVisibility(View.VISIBLE);
+                        try{ImageUpload(Uri.parse(path),activity);}catch (NullPointerException ignored){catched=true;}
+                        final Boolean finalCatched = catched;
                         mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Name").setValue(name.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            public void onComplete(@NonNull Task<Void> task) {profile_name.setText(name.getText().toString());}});
+                            public void onComplete(@NonNull Task<Void> task) {profile_name.setText(name.getText().toString());if(finalCatched)show.dismiss();}});
                         mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("City").setValue(city.getText().toString());
                         mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Birth").setValue(birth.getText().toString());
                         if(female.isChecked())mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Gender").setValue("Female");
-                        if(male.isChecked())mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Gender").setValue("Male");
-                        if(none.isChecked())mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Gender").setValue("Not Specified");
-                        try{ImageUpload(Uri.parse(path),activity);show.dismiss();}catch (NullPointerException e){show.dismiss();}
+                        else if(male.isChecked())mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Gender").setValue("Male");
+                        else if(none.isChecked())mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Gender").setValue("Not Specified");
+
                     }
                 });
                 mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -1109,6 +1119,7 @@ public class FirstPage extends AppCompatActivity {
                         Drawable blurredDrawable = new BitmapDrawable(activity.getResources(), blurredBitmap );
                         ImageView background = (ImageView) activity.findViewById(R.id.profile_background);
                         background.setImageDrawable(blurredDrawable);
+                        show.dismiss();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -1128,6 +1139,9 @@ public class FirstPage extends AppCompatActivity {
                 "Select Picture"), SELECT_PICTURE);
     }
     public void MailSignedIn(){
+        progresstext.setText("Signing in via Email.\nPlease wait...");
+        progresstext.setVisibility(View.VISIBLE);
+        signedinprogress.setVisibility(View.VISIBLE);
         profile_edit.setVisibility(View.VISIBLE);
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -1206,6 +1220,9 @@ public class FirstPage extends AppCompatActivity {
         });
     }
     public void FacebookSignedIn(){
+        progresstext.setText("Signing in via Facebook.\nPlease wait...");
+        progresstext.setVisibility(View.VISIBLE);
+        signedinprogress.setVisibility(View.VISIBLE);
         mDatabase.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Name").setValue(Profile.getCurrentProfile().getName());
         mDatabase.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Facebook ID").setValue(Profile.getCurrentProfile().getId());
         mDatabase.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Provider").setValue("Facebook");
@@ -1275,6 +1292,8 @@ public class FirstPage extends AppCompatActivity {
         header_font = Typeface.createFromAsset(getAssets(), "fonts/Font.ttf");
         billabong = Typeface.createFromAsset(getAssets(), "fonts/Billabong.ttf");
 
+        progresstext = (TextView) findViewById(R.id.textView_10);
+        signedinprogress = (ProgressBar) findViewById(R.id.progress_bar_3);
         signed_in_container = (RelativeLayout) findViewById(R.id.signed_in_container);
 
         profile_edit = (ImageView) findViewById(R.id.profile_edit);

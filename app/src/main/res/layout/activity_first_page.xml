@@ -44,6 +44,19 @@
                 android:indeterminate="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:visibility="gone"
+                />
+            <TextView
+                android:id="@+id/textView_10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/progress_bar_3"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/black_overlay"
+                android:gravity="center"
+                android:visibility="gone"
                 />
         </RelativeLayout>
         <RelativeLayout

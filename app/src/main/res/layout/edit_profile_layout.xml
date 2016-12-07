@@ -7,10 +7,9 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/edit_profile_image_container"
         android:layout_alignBottom="@+id/edit_finish"
-        android:layout_marginTop="-60dp"
-        android:background="#D6564B"
+        android:background="@mipmap/bgblr"
+        android:scaleType="centerCrop"
         />
 
     <android.support.design.widget.CoordinatorLayout
@@ -37,8 +36,8 @@
             android:id="@+id/edit_profile_image"
             android:layout_width="130dp"
             android:layout_height="130dp"
-            app:civ_border_width="5dp"
-            app:civ_border_color="#D6564B"
+            app:civ_border_width="2dp"
+            app:civ_border_color="@color/com_facebook_button_login_silver_background_color"
             />
     </android.support.design.widget.CoordinatorLayout>
 
@@ -133,15 +132,29 @@
         android:layout_marginRight="18dp"
         android:id="@+id/radioButton_male" />
 
+    <ProgressBar
+        android:id="@+id/progress_bar_4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="18dp"
+        android:layout_marginLeft="18dp"
+        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_above="@+id/edit_finish"
+        android:indeterminate="true"
+        android:visibility="gone"
+        android:layout_marginBottom="-15dp"
+        />
+
     <Button
         android:id="@+id/edit_finish"
         android:text="Finish Editing"
-        android:background="#D6564B"
-        android:layout_below="@+id/radioButton_male"
-        android:layout_marginTop="15dp"
+        android:background="@android:color/transparent"
+        android:layout_marginTop="13dp"
         android:textColor="@android:color/white"
         android:textAllCaps="false"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/radio_female"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
