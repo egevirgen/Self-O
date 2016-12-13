@@ -19,6 +19,7 @@ import android.support.multidex.MultiDex;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -243,6 +245,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onBackPressed();
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -305,11 +308,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Location("Move");
             mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
 
 
         for (int i=0;i<5;i++) {
-
             latLng = new LatLng(latt[i],longt[i]);
             mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).title(placeList[i].split("--")[0]).snippet(placeList[i].split("--")[1]+"/"+ placeList[i].split("--")[2]));
         }
@@ -330,9 +333,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 else if(type.equals("Animate"))
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlong1,12));
             } catch (NullPointerException | IllegalStateException e) {
-
+                if(type.equals("Move"))
+                   Location("Move");
+                else if(type.equals("Animate"))
+                   Location("Animate");
             }}
         };
+        mainHandler.removeCallbacks(myRunnable);
         mainHandler.postDelayed(myRunnable,500);
     }
 
