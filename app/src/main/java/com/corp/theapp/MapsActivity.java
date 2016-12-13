@@ -52,7 +52,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected static final int RESULT_SPEECH = 1;
     private GoogleMap mMap;
     private BottomSheetBehavior mBottomSheetBehavior;
-
     double latt[]={36.864727,36.901504,36.892676,36.884583,36.898750};
     double longt[]={30.634416,30.672853,30.667396,30.659156,30.653261};
     // Declare Variables
@@ -116,8 +115,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onFocusChange(View view, boolean b) {
                 Log.e("focused=",""+b);
-                if(b)
-                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                if(b){ mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);  }
 
             }
         });

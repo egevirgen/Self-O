@@ -2,7 +2,6 @@ package com.corp.theapp;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
@@ -19,10 +18,10 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.Result;
 
@@ -38,6 +37,7 @@ public class QRReader extends AppCompatActivity   implements  ZXingScannerView.R
     TextView flash_text,af_text;
     DatabaseReference mDatabase;
     SweetAlertDialog pDialog;
+    private static FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
@@ -46,7 +46,6 @@ public class QRReader extends AppCompatActivity   implements  ZXingScannerView.R
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
-
     }
 
     protected void init(){
@@ -65,7 +64,8 @@ public class QRReader extends AppCompatActivity   implements  ZXingScannerView.R
                     af = (ImageView) findViewById(R.id.qr_af);
                     flash_text = (TextView) findViewById(R.id.qr_flash_text);
                     af_text = (TextView) findViewById(R.id.qr_af_text);
-                    mDatabase = FirebaseDatabase.getInstance().getReference();
+
+
     }
 
     protected void permissionCheck(){
@@ -162,7 +162,7 @@ public class QRReader extends AppCompatActivity   implements  ZXingScannerView.R
     }
 
     public void QRKontrol(final Result result){
-        mDatabase.child(result.getText()).addListenerForSingleValueEvent(new ValueEventListener() {
+     /*   mDatabase.child(result.getText()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot snapshot) {
                 if(snapshot.getValue()!=null){
@@ -181,7 +181,7 @@ public class QRReader extends AppCompatActivity   implements  ZXingScannerView.R
                                             intent.putExtra("firma_ID",result.getText());
                                             intent.putExtra("firma_AD", snapshot.child("isim").getValue().toString());
                                             intent.putExtra("menu",snapshot.child("mainmenu").getValue().toString());
-                                            startActivity(intent);*/
+                                            startActivity(intent);
                                             overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
                                         }
                                     }).show();}
@@ -205,8 +205,9 @@ public class QRReader extends AppCompatActivity   implements  ZXingScannerView.R
             public void onCancelled(DatabaseError databaseError) {
             }
 
-        });
+        });*/
     }
+
 
     protected void loadingDialog(){
                                     pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);

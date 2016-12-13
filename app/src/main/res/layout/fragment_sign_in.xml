@@ -11,8 +11,9 @@
 
 
         <RelativeLayout
+            android:id="@+id/rl_1"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/edittext_1"
@@ -53,7 +54,22 @@
 
         </RelativeLayout>
 
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_1"
+        android:layout_above="@+id/button_1"
+        >
+        <com.bhargavms.dotloader.DotLoader
+            android:id="@+id/dot_loader_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:color_array="@array/dot_color_one"
+            app:dot_radius="5dp"
+            android:layout_centerInParent="true"
+            android:visibility="invisible"
+            app:number_of_dots="3"/>
+    </RelativeLayout>
     <Button
         android:id="@+id/button_1"
         android:text="Sign In"
@@ -111,16 +127,8 @@
         android:textColor="@android:color/white"
         android:text="Sign in with Facebook"
         android:textAllCaps="false" />
-    <ProgressBar
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_above="@+id/button_1"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:indeterminate="true"
-        android:visibility="gone"
-        android:layout_height="wrap_content"
-        android:id="@+id/progress_bar_1" />
+
+
 
     <TextView
         android:layout_width="wrap_content"

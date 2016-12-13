@@ -59,6 +59,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bhargavms.dotloader.DotLoader;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -76,6 +77,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -118,11 +120,11 @@ public class FirstPage extends AppCompatActivity {
     static TextView profile_name;
     static TextView profile_mail;
     ViewPager mViewPager;
-    ProgressBar signedinprogress;
     static ProgressBar editprogress;
     TextView progresstext;
     static AlertDialog show;
-
+    DotLoader dotLoader1;
+    static DotLoader dotLoader2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme_NoActionBar);
@@ -186,6 +188,7 @@ public class FirstPage extends AppCompatActivity {
                         show = alert.show();
                         show.show();
                         TextView canc,cont,header;
+                        dotLoader2 = (DotLoader) alertView.findViewById(R.id.dot_loader_2);
                         final ProgressBar progressBar = (ProgressBar) alertView.findViewById(R.id.progress_bar_2);
                         final MaterialEditText input;
                         canc = (TextView) alertView.findViewById(R.id.textView_7);
@@ -368,7 +371,7 @@ public class FirstPage extends AppCompatActivity {
         final CoordinatorLayout coordinatorLayout = (CoordinatorLayout) activity.findViewById(R.id.main_content);
         final MaterialEditText email,password;
         Button signin;
-
+        dotLoader2 = (DotLoader) rootView.findViewById(R.id.dot_loader_2);
         email = (MaterialEditText) rootView.findViewById(R.id.edittext_1);
         password = (MaterialEditText) rootView.findViewById(R.id.edittext_2);
         password.setTransformationMethod(new PasswordTransformationMethod());
@@ -381,9 +384,8 @@ public class FirstPage extends AppCompatActivity {
                 InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 if(!email.getText().toString().equals("") & !password.getText().toString().equals("") ){
-
-                    final ProgressBar progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar_1);
-                    progressBar.setVisibility(View.VISIBLE);
+                    dotLoader2 = (DotLoader) rootView.findViewById(R.id.dot_loader_2);
+                    dotLoader2.setVisibility(View.VISIBLE);
                     mAuth.signInWithEmailAndPassword(email.getText().toString(),password.getText().toString())
                             .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -392,7 +394,7 @@ public class FirstPage extends AppCompatActivity {
                                         task.addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                progressBar.setVisibility(View.GONE);
+                                                dotLoader2.setVisibility(View.INVISIBLE);
                                                 Snackbar snackbar;
                                                 Log.e("exception = ",""+e);
                                                 if(e.toString().contains("The email address is badly formatted.")){
@@ -430,12 +432,11 @@ public class FirstPage extends AppCompatActivity {
                                     else{
                                         Log.e("login =","successful");
                                         if(mAuth.getCurrentUser().isEmailVerified()){
-                                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        mDatabase.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Name").addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                               final String name = dataSnapshot.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Name").getValue().toString();
+                                                final String name = dataSnapshot.getValue().toString();
                                                 final String mail = mAuth.getCurrentUser().getEmail();
-
                                                 profile_name = (TextView) activity.findViewById(R.id.profile_name);
                                                 profile_mail = (TextView) activity.findViewById(R.id.profile_mail);
                                                 profile_image = (CircleImageView) activity.findViewById(R.id.profile_image);
@@ -463,7 +464,7 @@ public class FirstPage extends AppCompatActivity {
                                                                         signInAnimation(appBarLayout);
                                                                         signInBehaviour(activity);
                                                                         profile_edit.setVisibility(View.VISIBLE);
-                                                                        progressBar.setVisibility(View.GONE);
+                                                                        dotLoader2.setVisibility(View.INVISIBLE);
                                                                     }
                                                                 });
 
@@ -483,7 +484,7 @@ public class FirstPage extends AppCompatActivity {
                                                                 textView_welcome.animate().alpha(0).withLayer().withEndAction(new Runnable() {
                                                                     @Override
                                                                     public void run() {
-                                                                        progressBar.setVisibility(View.GONE);
+                                                                        dotLoader2.setVisibility(View.INVISIBLE);
                                                                         textView_welcome.setVisibility(View.GONE);
                                                                         signed_in_container.setVisibility(View.VISIBLE);
                                                                         signed_in_container.animate().alpha(1).withLayer();
@@ -512,7 +513,7 @@ public class FirstPage extends AppCompatActivity {
                                         });}
                                         else{
                                             mAuth.signOut();
-                                            progressBar.setVisibility(View.GONE);
+                                            dotLoader2.setVisibility(View.INVISIBLE);
                                             new SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                                                     .setTitleText("Email is not verified")
                                                     .setContentText("Please verify your email before continue.")
@@ -557,9 +558,9 @@ public class FirstPage extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
                 // Eğer Facebook oturum açması başarılı olduysa Firebase Database'inde bu bilgileri kullanarak oturum açmaya yarayan komut.
                 Log.e("success","1");
-               ProgressBar progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar_1);
-                progressBar.setVisibility(View.VISIBLE);
-                handleFacebookAccessToken(loginResult.getAccessToken().getToken(),activity,progressBar);
+                DotLoader dotLoader2 = (DotLoader) rootView.findViewById(R.id.dot_loader_2);
+                dotLoader2.setVisibility(View.VISIBLE);
+                handleFacebookAccessToken(loginResult.getAccessToken().getToken(),activity,dotLoader2);
             }
 
             @Override
@@ -583,7 +584,7 @@ public class FirstPage extends AppCompatActivity {
 
     }
 
-    private static void handleFacebookAccessToken(String token, final Activity activity, final ProgressBar progressBar) {
+    private static void handleFacebookAccessToken(String token, final Activity activity, final DotLoader dotLoader2) {
         final CoordinatorLayout coordinatorLayout = (CoordinatorLayout) activity.findViewById(R.id.main_content);
         final AppBarLayout appBarLayout = (AppBarLayout) activity.findViewById(R.id.appbar);
         AuthCredential credential = FacebookAuthProvider.getCredential(token);
@@ -613,10 +614,10 @@ public class FirstPage extends AppCompatActivity {
                             mDatabase.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Name").setValue(Profile.getCurrentProfile().getName());
                             mDatabase.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Facebook ID").setValue(Profile.getCurrentProfile().getId());
                             mDatabase.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Provider").setValue("Facebook");
-                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                            mDatabase.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Name").addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                    final String name = dataSnapshot.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Name").getValue().toString();
+                                    final String name = dataSnapshot.getValue().toString();
                                     final String mail = mAuth.getCurrentUser().getEmail().toString();
 
                                     profile_name = (TextView) activity.findViewById(R.id.profile_name);
@@ -652,7 +653,7 @@ public class FirstPage extends AppCompatActivity {
                                                                 signed_in_container.animate().alpha(1).withLayer();
                                                             }
                                                         });
-                                                        progressBar.setVisibility(View.GONE);
+                                                        dotLoader2.setVisibility(View.INVISIBLE);
                                                         signInBehaviour(activity);
                                                     }
                                                 });
@@ -845,19 +846,18 @@ public class FirstPage extends AppCompatActivity {
         signed_in_container.animate().alpha(1).withLayer();
 
         final ImageView exit,edit;
-       CardView qr;
-        CardView participating;
+        Button qr;
+        Button participating;
         exit = (ImageView) activity.findViewById(R.id.profile_exit);
         edit = (ImageView) activity.findViewById(R.id.profile_edit);
-        qr = (CardView) activity.findViewById(R.id.profile_scan_qr);
-        participating = (CardView) activity.findViewById(R.id.profile_participating_workplaces);
+        qr = (Button) activity.findViewById(R.id.continue_1);
+        participating = (Button) activity.findViewById(R.id.continue_2);
 
         participating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(activity,MapsActivity.class);
                 activity.startActivity(intent);
-                activity.overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
             }
         });
 
@@ -1011,7 +1011,7 @@ public class FirstPage extends AppCompatActivity {
 
                     }
                 });
-                mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                mDatabase.child("Users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         try{name.setText(dataSnapshot.child("Name").getValue().toString());}catch (NullPointerException ignored){}
@@ -1141,14 +1141,13 @@ public class FirstPage extends AppCompatActivity {
     public void MailSignedIn(){
         progresstext.setText("Signing in via Email.\nPlease wait...");
         progresstext.setVisibility(View.VISIBLE);
-        signedinprogress.setVisibility(View.VISIBLE);
+        dotLoader1.setVisibility(View.VISIBLE);
         profile_edit.setVisibility(View.VISIBLE);
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Name").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                final String name = dataSnapshot.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Name").getValue().toString();
+                final String name = dataSnapshot.getValue().toString();
                 final String mail = mAuth.getCurrentUser().getEmail();
-
                 profile_name = (TextView) findViewById(R.id.profile_name);
                 profile_mail = (TextView) findViewById(R.id.profile_mail);
                 profile_image = (CircleImageView) findViewById(R.id.profile_image);
@@ -1222,14 +1221,14 @@ public class FirstPage extends AppCompatActivity {
     public void FacebookSignedIn(){
         progresstext.setText("Signing in via Facebook.\nPlease wait...");
         progresstext.setVisibility(View.VISIBLE);
-        signedinprogress.setVisibility(View.VISIBLE);
+        dotLoader1.setVisibility(View.VISIBLE);
         mDatabase.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Name").setValue(Profile.getCurrentProfile().getName());
         mDatabase.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Facebook ID").setValue(Profile.getCurrentProfile().getId());
         mDatabase.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Provider").setValue("Facebook");
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Name").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                final String name = dataSnapshot.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Name").getValue().toString();
+                final String name = dataSnapshot.getValue().toString();
                 final String mail = mAuth.getCurrentUser().getEmail();
 
                 profile_name = (TextView) findViewById(R.id.profile_name);
@@ -1292,8 +1291,8 @@ public class FirstPage extends AppCompatActivity {
         header_font = Typeface.createFromAsset(getAssets(), "fonts/Font.ttf");
         billabong = Typeface.createFromAsset(getAssets(), "fonts/Billabong.ttf");
 
+        dotLoader1 = (DotLoader) findViewById(R.id.dot_loader_1);
         progresstext = (TextView) findViewById(R.id.textView_10);
-        signedinprogress = (ProgressBar) findViewById(R.id.progress_bar_3);
         signed_in_container = (RelativeLayout) findViewById(R.id.signed_in_container);
 
         profile_edit = (ImageView) findViewById(R.id.profile_edit);
