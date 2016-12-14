@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ContentFrameLayout;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -50,7 +51,9 @@ public class QRReader extends AppCompatActivity   implements  ZXingScannerView.R
 
     protected void init(){
         // FullScreen komutu ve Ekran Ayarlamaları
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         ColorDrawable colorDrawable = new ColorDrawable(0x000000);
         getWindow().setBackgroundDrawable(colorDrawable);

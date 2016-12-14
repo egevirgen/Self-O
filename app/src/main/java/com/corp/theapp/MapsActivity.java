@@ -117,7 +117,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onFocusChange(View view, boolean b) {
                 Log.e("focused=",""+b);
-                if(b){ mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);  }
+                if(b){
+                    Handler handler = new Handler();
+                    Runnable runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                        }
+                    };
+                    handler.removeCallbacks(runnable);
+                    handler.postDelayed(runnable,300);
+
+
+                }
 
             }
         });
@@ -131,12 +143,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
 
-                if (mBottomSheetBehavior.getState()== BottomSheetBehavior.STATE_EXPANDED)
+                if (mBottomSheetBehavior.getState()!= BottomSheetBehavior.STATE_COLLAPSED)
                 {
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
                 }
-                else if (mBottomSheetBehavior.getState()== BottomSheetBehavior.STATE_COLLAPSED) {
+                else if (mBottomSheetBehavior.getState()!= BottomSheetBehavior.STATE_EXPANDED) {
 
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
@@ -250,7 +262,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
         setContentView(R.layout.activity_maps);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);

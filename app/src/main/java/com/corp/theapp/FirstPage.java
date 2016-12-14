@@ -74,6 +74,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -130,7 +131,8 @@ public class FirstPage extends AppCompatActivity {
         setTheme(R.style.AppTheme_NoActionBar);
         SdkInit();
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);requestWindowFeature(Window.FEATURE_NO_TITLE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setStatusBarTranslucent(true);}
         setContentView(R.layout.activity_first_page);
         Initialize();
         SignedInDecider();
@@ -846,18 +848,28 @@ public class FirstPage extends AppCompatActivity {
         signed_in_container.animate().alpha(1).withLayer();
 
         final ImageView exit,edit;
-        Button qr;
-        Button participating;
+        final Button qr;
+        final Button participating;
+        ImageView qrimage,participatingimage,checkinimage;
+        qrimage = (ImageView) activity.findViewById(R.id.imageView_0);
+        participatingimage = (ImageView) activity.findViewById(R.id.imageView_1);
+        checkinimage = (ImageView) activity.findViewById(R.id.imageView_2);
         exit = (ImageView) activity.findViewById(R.id.profile_exit);
         edit = (ImageView) activity.findViewById(R.id.profile_edit);
         qr = (Button) activity.findViewById(R.id.continue_1);
         participating = (Button) activity.findViewById(R.id.continue_2);
 
-        participating.setOnClickListener(new View.OnClickListener() {
+     qrimage.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View view) {
+             qr.performClick();
+         }
+     });
+
+        participatingimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(activity,MapsActivity.class);
-                activity.startActivity(intent);
+                participating.performClick();
             }
         });
 
@@ -885,153 +897,18 @@ public class FirstPage extends AppCompatActivity {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                path = null;
-                LayoutInflater inflater = LayoutInflater.from(activity);
-                View alertView = inflater.inflate(R.layout.edit_profile_layout, null);
 
-                final AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.myDialog));
-                alert.setView(alertView);
-                show = alert.show();
-                editPhoto = (CircleImageView) alertView.findViewById(R.id.edit_profile_image);
-                FloatingActionButton editPhotoEdit = (FloatingActionButton) alertView.findViewById(R.id.edit_profile_image_fab);
-                editPhotoEdit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if (activity.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                                    != PackageManager.PERMISSION_GRANTED) {
-                                // Should we show an explanation?
-                                if (activity.shouldShowRequestPermissionRationale(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                                    // Explain to the user why we need to read the contacts
-                                }
-                                activity.requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},5);
-                                ImagePicker(activity);
-                                return;
-                            }
-                            else{
-                                ImagePicker(activity);
-                            }
-                        }else
-                            ImagePicker(activity);
-
-                    }
-                });
-                final MaterialEditText name,city,birth;
-                name = (MaterialEditText) alertView.findViewById(R.id.edittext_8);
-                city = (MaterialEditText) alertView.findViewById(R.id.edittext_9);
-                birth = (MaterialEditText) alertView.findViewById(R.id.edittext_10);
-                final TextWatcher tw = new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        if (!s.toString().equals(current)) {
-                            String clean = s.toString().replaceAll("[^\\d.]", "");
-                            String cleanC = current.replaceAll("[^\\d.]", "");
-
-                            int cl = clean.length();
-                            int sel = cl;
-                            for (int i = 2; i <= cl && i < 6; i += 2) {
-                                sel++;
-                            }
-                            //Fix for pressing delete next to a forward slash
-                            if (clean.equals(cleanC)) sel--;
-
-                            if (clean.length() < 8){
-                                clean = clean + ddmmyyyy.substring(clean.length());
-                            }else{
-                                //This part makes sure that when we finish entering numbers
-                                //the date is correct, fixing it otherwise
-                                int day  = Integer.parseInt(clean.substring(0,2));
-                                int mon  = Integer.parseInt(clean.substring(2,4));
-                                int year = Integer.parseInt(clean.substring(4,8));
-
-                                if(mon > 12) mon = 12;
-                                if(mon == 0) mon = 1;
-                                if(day ==0) day = 1;
-                                cal.set(Calendar.MONTH, mon-1);
-                                year = (year<1900)?1900:(year>2000)?2000:year;
-                                cal.set(Calendar.YEAR, year);
-                                // ^ first set year for the line below to work correctly
-                                //with leap years - otherwise, date e.g. 29/02/2012
-                                //would be automatically corrected to 28/02/2012
-
-                                day = (day > cal.getActualMaximum(Calendar.DATE))? cal.getActualMaximum(Calendar.DATE):day;
-                                clean = String.format("%02d%02d%02d",day, mon, year);
-                            }
-
-                            clean = String.format("%s/%s/%s", clean.substring(0, 2),
-                                    clean.substring(2, 4),
-                                    clean.substring(4, 8));
-
-                            sel = sel < 0 ? 0 : sel;
-                            current = clean;
-                            birth.setText(current);
-                            birth.setSelection(sel < current.length() ? sel : current.length());
-                            Log.e("text = ",birth.getText().toString());
-                        }
-                    }
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-
-                    }
-
-                    private String current = "";
-                    private String ddmmyyyy = "DDMMYYYY";
-                    private Calendar cal = Calendar.getInstance();};
-                birth.addTextChangedListener(tw);
-                final AppCompatRadioButton female,male,none;
-                editprogress = (ProgressBar) alertView.findViewById(R.id.progress_bar_4);
-                female = (AppCompatRadioButton) alertView.findViewById(R.id.radio_female);
-                male = (AppCompatRadioButton) alertView.findViewById(R.id.radioButton_male);
-                none = (AppCompatRadioButton) alertView.findViewById(R.id.radioButton_notspecified);
-                female.setOnClickListener(new View.OnClickListener(){public void onClick(View view) {male.setChecked(false);none.setChecked(false);}});
-                male.setOnClickListener(new View.OnClickListener(){public void onClick(View view) {female.setChecked(false);none.setChecked(false);}});
-                none.setOnClickListener(new View.OnClickListener(){public void onClick(View view) {male.setChecked(false);female.setChecked(false);}});
-
-                Button editFinish;
-                editFinish = (Button) alertView.findViewById(R.id.edit_finish);
-                editFinish.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Boolean catched=false;
-                        editprogress.setVisibility(View.VISIBLE);
-                        try{ImageUpload(Uri.parse(path),activity);}catch (NullPointerException ignored){catched=true;}
-                        final Boolean finalCatched = catched;
-                        mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Name").setValue(name.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            public void onComplete(@NonNull Task<Void> task) {profile_name.setText(name.getText().toString());if(finalCatched)show.dismiss();}});
-                        mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("City").setValue(city.getText().toString());
-                        mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Birth").setValue(birth.getText().toString());
-                        if(female.isChecked())mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Gender").setValue("Female");
-                        else if(male.isChecked())mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Gender").setValue("Male");
-                        else if(none.isChecked())mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Gender").setValue("Not Specified");
-
-                    }
-                });
-                mDatabase.child("Users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        try{name.setText(dataSnapshot.child("Name").getValue().toString());}catch (NullPointerException ignored){}
-                        try{city.setText(dataSnapshot.child("City").getValue().toString());}catch (NullPointerException ignored){}
-                        try{birth.setText(dataSnapshot.child("Birth").getValue().toString());}catch (NullPointerException ignored){}
-                        try{if(dataSnapshot.child("Gender").getValue().toString().equals("Female")){female.setChecked(true);}if(dataSnapshot.child("Gender").getValue().toString().equals("Male")){male.setChecked(true);}if(dataSnapshot.child("Gender").getValue().toString().equals("Not Specified")){none.setChecked(true);}}catch (NullPointerException ignored){none.setChecked(true);}
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-                ////////////
-                editPhoto.setImageDrawable(profile_image.getDrawable());
-                show.show();
+               EditDialog(activity);
             }
         });
 
+        participating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(activity,MapsActivity.class);
+                activity.startActivity(intent);
+            }
+        });
 
         qr.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1373,6 +1250,240 @@ public class FirstPage extends AppCompatActivity {
             }
 
 
+        }
+    }
+
+    public static void EditDialog(final Activity activity){
+        path = null;
+        final LayoutInflater inflater = LayoutInflater.from(activity);
+        View alertView = inflater.inflate(R.layout.edit_profile_layout, null);
+
+        final AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.myDialog));
+        alert.setView(alertView);
+        show = alert.show();
+        editPhoto = (CircleImageView) alertView.findViewById(R.id.edit_profile_image);
+        FloatingActionButton editPhotoEdit = (FloatingActionButton) alertView.findViewById(R.id.edit_profile_image_fab);
+        editPhotoEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (activity.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        // Should we show an explanation?
+                        if (activity.shouldShowRequestPermissionRationale(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                            // Explain to the user why we need to read the contacts
+                        }
+                        activity.requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},5);
+                        ImagePicker(activity);
+                        return;
+                    }
+                    else{
+                        ImagePicker(activity);
+                    }
+                }else
+                    ImagePicker(activity);
+
+            }
+        });
+        final MaterialEditText name,city,birth;
+        name = (MaterialEditText) alertView.findViewById(R.id.edittext_8);
+        city = (MaterialEditText) alertView.findViewById(R.id.edittext_9);
+        birth = (MaterialEditText) alertView.findViewById(R.id.edittext_10);
+        final TextWatcher tw = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.toString().equals(current)) {
+                    String clean = s.toString().replaceAll("[^\\d.]", "");
+                    String cleanC = current.replaceAll("[^\\d.]", "");
+
+                    int cl = clean.length();
+                    int sel = cl;
+                    for (int i = 2; i <= cl && i < 6; i += 2) {
+                        sel++;
+                    }
+                    //Fix for pressing delete next to a forward slash
+                    if (clean.equals(cleanC)) sel--;
+
+                    if (clean.length() < 8){
+                        clean = clean + ddmmyyyy.substring(clean.length());
+                    }else{
+                        //This part makes sure that when we finish entering numbers
+                        //the date is correct, fixing it otherwise
+                        int day  = Integer.parseInt(clean.substring(0,2));
+                        int mon  = Integer.parseInt(clean.substring(2,4));
+                        int year = Integer.parseInt(clean.substring(4,8));
+
+                        if(mon > 12) mon = 12;
+                        if(mon == 0) mon = 1;
+                        if(day ==0) day = 1;
+                        cal.set(Calendar.MONTH, mon-1);
+                        year = (year<1900)?1900:(year>2000)?2000:year;
+                        cal.set(Calendar.YEAR, year);
+                        // ^ first set year for the line below to work correctly
+                        //with leap years - otherwise, date e.g. 29/02/2012
+                        //would be automatically corrected to 28/02/2012
+
+                        day = (day > cal.getActualMaximum(Calendar.DATE))? cal.getActualMaximum(Calendar.DATE):day;
+                        clean = String.format("%02d%02d%02d",day, mon, year);
+                    }
+
+                    clean = String.format("%s/%s/%s", clean.substring(0, 2),
+                            clean.substring(2, 4),
+                            clean.substring(4, 8));
+
+                    sel = sel < 0 ? 0 : sel;
+                    current = clean;
+                    birth.setText(current);
+                    birth.setSelection(sel < current.length() ? sel : current.length());
+                    Log.e("text = ",birth.getText().toString());
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+
+            private String current = "";
+            private String ddmmyyyy = "DDMMYYYY";
+            private Calendar cal = Calendar.getInstance();};
+        birth.addTextChangedListener(tw);
+        final AppCompatRadioButton female,male,none;
+        editprogress = (ProgressBar) alertView.findViewById(R.id.progress_bar_4);
+        editprogress.setVisibility(View.VISIBLE);
+        female = (AppCompatRadioButton) alertView.findViewById(R.id.radio_female);
+        male = (AppCompatRadioButton) alertView.findViewById(R.id.radioButton_male);
+        none = (AppCompatRadioButton) alertView.findViewById(R.id.radioButton_notspecified);
+        female.setOnClickListener(new View.OnClickListener(){public void onClick(View view) {male.setChecked(false);none.setChecked(false);}});
+        male.setOnClickListener(new View.OnClickListener(){public void onClick(View view) {female.setChecked(false);none.setChecked(false);}});
+        none.setOnClickListener(new View.OnClickListener(){public void onClick(View view) {male.setChecked(false);female.setChecked(false);}});
+        Button editPassword;
+        Button editFinish;
+        editPassword = (Button) alertView.findViewById(R.id.edit_password);
+        editPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                show.dismiss();
+                View alertView1 = inflater.inflate(R.layout.edit_password_layout, null);
+
+                final AlertDialog.Builder alert1 = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.myDialog));
+                alert1.setView(alertView1);
+                show = alert1.show();
+                final MaterialEditText text1,text2,text3;
+                Button finish;
+                final ProgressBar progressBar;
+                progressBar = (ProgressBar) alertView1.findViewById(R.id.progress_bar_5);
+                text1 = (MaterialEditText) alertView1.findViewById(R.id.edittext_11);
+                text2 = (MaterialEditText) alertView1.findViewById(R.id.edittext_12);
+                text3 = (MaterialEditText) alertView1.findViewById(R.id.edittext_13);
+                finish = (Button) alertView1.findViewById(R.id.button_4);
+                finish.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Boolean password_match=false,password_character=false;
+                        if(!text1.getText().toString().equals("") & !text2.getText().toString().equals("") & !text3.getText().toString().equals("")) {
+                            if(!text2.getText().toString().equals(text3.getText().toString())){
+                                text2.setError("Passwords do not match");
+                                text3.setError("Passwords do not match");
+                            }
+                            else{
+                                password_match=true;
+                            }
+                            if(text2.getText().toString().length()<6){
+                                text2.setError("Min 6 characters");
+                            }
+                            else{
+                                password_character=true;
+                            }
+                            if(password_match & password_character){
+                                progressBar.setVisibility(View.VISIBLE);
+                                AuthCredential credential = EmailAuthProvider
+                                        .getCredential(profile_mail.getText().toString(), text1.getText().toString());
+                                mAuth.getCurrentUser().reauthenticate(credential)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Log.d("WOW", "User re-authenticated.");
+                                                    mAuth.getCurrentUser().updatePassword(text2.getText().toString())
+                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    if (task.isSuccessful()) {
+                                                                        Log.d("YES", "User password updated.");
+                                                                        show.dismiss();
+                                                                        Toast.makeText(activity,"User password updated",Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                }
+                                                            });
+                                                } else {
+                                                    text1.setError("Wrong password");
+                                                    progressBar.setVisibility(View.GONE);
+                                                    Log.d("WOW", "Wrong pw");
+                                                }
+                                            }
+                                        });
+                            }
+
+                        }
+                    }
+                });
+                text1.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                text2.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                text3.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
+        });
+        editFinish = (Button) alertView.findViewById(R.id.edit_finish);
+        editFinish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Boolean catched=false;
+                editprogress.setVisibility(View.VISIBLE);
+                try{ImageUpload(Uri.parse(path),activity);}catch (NullPointerException ignored){catched=true;}
+                final Boolean finalCatched = catched;
+                mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Name").setValue(name.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {profile_name.setText(name.getText().toString());if(finalCatched)show.dismiss();}});
+                mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("City").setValue(city.getText().toString());
+                mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Birth").setValue(birth.getText().toString());
+                if(female.isChecked())mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Gender").setValue("Female");
+                else if(male.isChecked())mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Gender").setValue("Male");
+                else if(none.isChecked())mDatabase.getDatabase().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Gender").setValue("Not Specified");
+
+            }
+        });
+        mDatabase.child("Users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                editprogress.setVisibility(View.GONE);
+                try{name.setText(dataSnapshot.child("Name").getValue().toString());}catch (NullPointerException ignored){}
+                try{city.setText(dataSnapshot.child("City").getValue().toString());}catch (NullPointerException ignored){}
+                try{birth.setText(dataSnapshot.child("Birth").getValue().toString());}catch (NullPointerException ignored){}
+                try{if(dataSnapshot.child("Gender").getValue().toString().equals("Female")){female.setChecked(true);}if(dataSnapshot.child("Gender").getValue().toString().equals("Male")){male.setChecked(true);}if(dataSnapshot.child("Gender").getValue().toString().equals("Not Specified")){none.setChecked(true);}}catch (NullPointerException ignored){none.setChecked(true);}
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        ////////////
+        editPhoto.setImageDrawable(profile_image.getDrawable());
+        show.show();
+    }
+
+    protected void setStatusBarTranslucent(boolean makeTranslucent) {
+        if (makeTranslucent) {
+
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
     }
 }
